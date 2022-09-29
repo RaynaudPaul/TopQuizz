@@ -1,4 +1,4 @@
-package com.example.topquizz;
+package Controleur;
 
 import android.content.Intent;
 import android.text.Editable;
@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.topquizz.R;
 
 public class MainActivity extends AppCompatActivity {
 

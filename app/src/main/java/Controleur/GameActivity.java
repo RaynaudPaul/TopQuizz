@@ -1,8 +1,9 @@
-package com.example.topquizz;
+package Controleur;
 
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.topquizz.R;
 
 public class GameActivity extends AppCompatActivity {
 
