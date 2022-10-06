@@ -1,10 +1,13 @@
 package Controleur;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.topquizz.R;
@@ -23,6 +26,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     QuestionBank mQuestionBank = generateQuestions();
     Question mCurrentQuestion;
     private int mRemainingQuestionCount;
+    private int mScore;
+    public static final String BUNDLE_EXTRA_SCORE = "BUNDLE_EXTRA_SCORE";
     
 
 
@@ -46,6 +51,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         displayQuestion(mCurrentQuestion);
 
         mRemainingQuestionCount = 4;
+        mScore = 0;
+        
     }
 
 
@@ -113,8 +120,32 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         if (index == mQuestionBank.getCurrentQuestion().getAnswerIndex()){
             Toast.makeText(this, "correct!", Toast.LENGTH_SHORT).show();
+            mScore++;
         } else {
             Toast.makeText(this, "incorrect!", Toast.LENGTH_SHORT).show();
+        }
+
+        mRemainingQuestionCount--;
+
+        if (mRemainingQuestionCount > 0){
+            mCurrentQuestion = mQuestionBank.getNextQuestion();
+            displayQuestion(mCurrentQuestion);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Well done!")
+                    .setMessage("Your score is " + mScore)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.putExtra(BUNDLE_EXTRA_SCORE, mScore);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
         }
 
     }
