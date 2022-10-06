@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mPlayButton;
     private TextView mGreetingTextView;
     private static final int GAME_ACTIVITY_REQUEST_CODE = 42;
+    private static final String SHARED_PREF_USER_INFO = "SHARED_PREF_USER_INFO";
+    private static final String SHARED_PREF_USER_INFO_NAME = "SHARED_PREF_USER_INFO_NAME";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
@@ -36,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         mNameEditText = findViewById(R.id.edit_text);
         mPlayButton = findViewById(R.id.button);
         mGreetingTextView = findViewById(R.id.TestView);
-
-
         mPlayButton.setEnabled(false);
+
+        String firstname = getSharedPreferences(SHARED_PREF_USER_INFO, MODE_PRIVATE).getString(SHARED_PREF_USER_INFO_NAME, null);
 
         mNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getSharedPreferences(SHARED_PREF_USER_INFO, MODE_PRIVATE)
+                        .edit()
+                        .putString(SHARED_PREF_USER_INFO_NAME, mNameEditText.getText().toString())
+                        .apply();
+
                 Intent gameActivityIntent = new Intent(MainActivity.this, GameActivity.class);
                 startActivityForResult(gameActivityIntent, GAME_ACTIVITY_REQUEST_CODE);
             }
