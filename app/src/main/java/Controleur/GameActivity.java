@@ -1,16 +1,29 @@
 package Controleur;
 
+import android.view.TextureView;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.topquizz.R;
+import modèle.Question;
+import modèle.QuestionBank;
 
-public class GameActivity extends AppCompatActivity {
+import java.util.Arrays;
 
+public class GameActivity extends AppCompatActivity implements View.OnClickListener {
+
+    TextView mTextView;
     Button mGameButton1;
     Button mGameButton2;
     Button mGameButton3;
     Button mGameButton4;
+    QuestionBank mQuestionBank = generateQuestions();
+    Question mCurrentQuestion;
+    private int mRemainingQuestionCount;
+    
 
 
     @Override
@@ -22,6 +35,87 @@ public class GameActivity extends AppCompatActivity {
         mGameButton2 = findViewById(R.id.game_activity_button_2);
         mGameButton3 = findViewById(R.id.game_activity_button_3);
         mGameButton4 = findViewById(R.id.game_activity_button_4);
+        mTextView = findViewById(R.id.game_activity_textview_question);
+
+        mGameButton1.setOnClickListener(this);
+        mGameButton2.setOnClickListener(this);
+        mGameButton3.setOnClickListener(this);
+        mGameButton4.setOnClickListener(this);
+
+        mCurrentQuestion = mQuestionBank.getCurrentQuestion();
+        displayQuestion(mCurrentQuestion);
+
+        mRemainingQuestionCount = 4;
+    }
+
+
+    private void displayQuestion(final Question question){
+        mTextView.setText(question.getQuestion());
+        mGameButton1.setText(question.getChoiceList().get(0));
+        mGameButton2.setText(question.getChoiceList().get(1));
+        mGameButton3.setText(question.getChoiceList().get(2));
+        mGameButton4.setText(question.getChoiceList().get(3));
+
+    }
+
+    private QuestionBank generateQuestions(){
+        Question question1 = new Question(
+                "Who is the creator of Android?",
+                Arrays.asList(
+                        "Andy Rubin",
+                        "Steve Wozniak",
+                        "Jake Wharton",
+                        "Paul Smith"
+                ),
+                0
+        );
+
+        Question question2 = new Question(
+                "When did the first man land on the moon?",
+                Arrays.asList(
+                        "1958",
+                        "1962",
+                        "1967",
+                        "1969"
+                ),
+                3
+        );
+
+        Question question3 = new Question(
+                "What is the house number of The Simpsons?",
+                Arrays.asList(
+                        "42",
+                        "101",
+                        "666",
+                        "742"
+                ),
+                3
+        );
+
+        return new QuestionBank(Arrays.asList(question1, question2, question3));
+    }
+
+    @Override
+    public void onClick(View view) {
+        int index;
+
+        if (view == mGameButton1) {
+            index = 0;
+        } else if (view == mGameButton2) {
+            index = 1;
+        } else if (view == mGameButton3) {
+            index = 2;
+        } else if (view == mGameButton4) {
+            index = 3;
+        } else {
+            throw new IllegalStateException("Unknown clicked view : " + view);
+        }
+
+        if (index == mQuestionBank.getCurrentQuestion().getAnswerIndex()){
+            Toast.makeText(this, "correct!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "incorrect!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }
